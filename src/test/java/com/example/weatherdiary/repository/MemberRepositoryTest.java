@@ -2,6 +2,7 @@ package com.example.weatherdiary.repository;
 
 import com.example.weatherdiary.domain.Member;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
+    @DisplayName("JpaRepository -> save()")
     void save() {
         // given
         Member member = Member.builder()
@@ -37,6 +39,7 @@ class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("JpaRepository -> findById()")
     void findById() {
         // given
         Member savedMember1 = memberRepository.save(Member.builder()
@@ -69,6 +72,7 @@ class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("JpaRepository -> delete()")
     void delete() {
         // given
         Member savedMember = memberRepository.save(Member.builder()
@@ -84,4 +88,6 @@ class MemberRepositoryTest {
         // then
         assertEquals(Optional.empty(), memberRepository.findById(savedMember.getId()));
     }
+
+
 }

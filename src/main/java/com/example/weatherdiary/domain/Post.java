@@ -1,10 +1,9 @@
 package com.example.weatherdiary.domain;
 
-import com.fasterxml.jackson.databind.DatabindException;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -26,5 +25,6 @@ public class Post {
     @ManyToOne
     private Member member;
 
-    private Date createdDate;
+    @Column(name = "createdDate")
+    private LocalDate createdDate;
 }
