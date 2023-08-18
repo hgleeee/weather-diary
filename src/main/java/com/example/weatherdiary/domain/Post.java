@@ -24,7 +24,7 @@ public class Post {
     private String content;
 
     @ManyToOne
-    private User user;
+    private Member member;
 
     private Date createdDate;
 }
