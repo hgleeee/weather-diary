@@ -2,6 +2,7 @@ package com.example.weatherdiary.service;
 
 import com.example.weatherdiary.domain.Member;
 import com.example.weatherdiary.dto.LoginIdAndPassword;
+import com.example.weatherdiary.exception.InvalidValueException;
 import com.example.weatherdiary.exception.NotUniqueLoginIdException;
 import com.example.weatherdiary.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,4 +86,21 @@ class MemberServiceImplTest {
         assertThrows(NotUniqueLoginIdException.class, () -> memberService.checkLoginIdDuplicated(member.getLoginId()),
                 String.format("%s는 중복된 아이디입니다.", member.getLoginId()));
     }
+
+    @Test
+    @DisplayName("회원 탈퇴 성공")
+    void deleteMemberWithSuccess() {
+        assertDoesNotThrow(() -> {
+            memberService.deleteMember(member, "test");
+        });
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 실패")
+    void deleteMemberWithFailure() {
+        assertThrows(InvalidValueException.class, () -> {
+            memberService.deleteMember(member, "test1");
+        }, "비밀번호가 일치하지 않습니다.");
+    }
+
 }
