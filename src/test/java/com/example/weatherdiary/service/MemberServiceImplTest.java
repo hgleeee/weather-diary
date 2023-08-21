@@ -42,6 +42,7 @@ class MemberServiceImplTest {
                 .build();
     }
 
+    @DisplayName("로그인 시 아이디 비밀번호 일치")
     @Test
     void findMemberLoginIdTestWithSuccess() {
 
@@ -56,6 +57,7 @@ class MemberServiceImplTest {
         assertEquals(member.getLoginId(), optionalLoginId.orElseThrow(() -> new RuntimeException()));
     }
 
+    @DisplayName("로그인 시 아이디 비밀번호 불일치")
     @Test
     void findMemberLoginIdTestWithFailure() {
 

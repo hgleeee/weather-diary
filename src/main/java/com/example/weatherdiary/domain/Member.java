@@ -28,6 +28,7 @@ public class Member {
     @Column(name = "email")
     private String email;
 
-    @OneToMany
-    private List<Post> writingList = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 }
