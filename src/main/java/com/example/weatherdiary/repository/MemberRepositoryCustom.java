@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface MemberRepositoryCustom {
 
-    public Optional<String> findMemberLoginId(LoginIdAndPassword loginIdAndPassword);
+    Optional<String> findMemberLoginId(LoginIdAndPassword loginIdAndPassword);
 }
