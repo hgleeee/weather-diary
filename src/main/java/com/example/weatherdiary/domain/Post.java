@@ -34,4 +34,8 @@ public class Post {
         this.member = member;
         member.getPosts().add(this);
     }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
