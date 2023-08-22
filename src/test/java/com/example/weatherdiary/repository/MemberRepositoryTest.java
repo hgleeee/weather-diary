@@ -2,21 +2,16 @@ package com.example.weatherdiary.repository;
 
 import com.example.weatherdiary.domain.Member;
 import com.example.weatherdiary.dto.LoginIdAndPassword;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@ExtendWith(SpringExtension.class)
 class MemberRepositoryTest {
 
     @Autowired
@@ -145,21 +140,16 @@ class MemberRepositoryTest {
                 .name("lee")
                 .email("test2@test.com")
                 .build());
-        memberRepository.save(Member.builder()
-                .loginId("test2")
-                .password("test3")
-                .name("lee")
-                .email("test3@test.com")
-                .build());
+
         // when
-        List<Member> testList = memberRepository.findByLoginId("test");
-        List<Member> test2List = memberRepository.findByLoginId("test2");
-        List<Member> test3List = memberRepository.findByLoginId("test3");
+        Optional<Member> test = memberRepository.findByLoginId("test");
+        Optional<Member> test2 = memberRepository.findByLoginId("test2");
+        Optional<Member> test3 = memberRepository.findByLoginId("test3");
 
         // then
-        assertEquals(1, testList.size());
-        assertEquals(2, test2List.size());
-        assertEquals(0, test3List.size());
+        assertTrue(test.isPresent());
+        assertTrue(test2.isPresent());
+        assertTrue(test3.isEmpty());
     }
 
 }

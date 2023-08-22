@@ -80,7 +80,7 @@ class MemberServiceImplTest {
     @DisplayName("중복 아이디 검사")
     void checkLoginIdDuplicated() {
         // given
-        when(memberRepository.findByLoginId(member.getLoginId())).thenReturn(List.of(member));
+        when(memberRepository.findByLoginId(member.getLoginId())).thenReturn(Optional.of(member));
 
         // when
 
