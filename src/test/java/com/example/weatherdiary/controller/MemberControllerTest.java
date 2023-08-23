@@ -1,8 +1,13 @@
 package com.example.weatherdiary.controller;
 
+import com.example.weatherdiary.domain.Member;
 import com.example.weatherdiary.dto.MemberSignUpParam;
+import com.example.weatherdiary.exception.InvalidValueException;
 import com.example.weatherdiary.exception.NotUniqueLoginIdException;
+import com.example.weatherdiary.repository.MemberRepository;
+import com.example.weatherdiary.resolver.CurrentMemberArgumentResolver;
 import com.example.weatherdiary.service.MemberService;
+import jdk.jfr.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -31,6 +36,15 @@ class MemberControllerTest {
 
     @MockBean
     MemberService memberService;
+
+    @MockBean
+    MemberRepository memberRepository;
+
+    @MockBean
+    CurrentMemberArgumentResolver currentMemberArgumentResolver;
+
+    @MockBean
+    LoginController loginController;
 
     @Test
     @DisplayName("회원가입 성공")
@@ -100,5 +114,36 @@ class MemberControllerTest {
 
         // then
         resultActions.andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 성공")
+    void deleteMemberWithSuccess() throws Exception {
+
+        // given
+        doNothing().when(memberService).deleteMember(any(Member.class), eq("test"));
+
+        // when
+        // then
+        mockMvc.perform(
+                delete("/member/myAccount")
+                        .param("password", "test"))
+                .andExpect(status().isOk());
+        verify(memberService).deleteMember(any(Member.class), eq("test"));
+        verify(loginController).logout();
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 실패 - 비밀번호 틀림")
+    void deleteMemberWithFailure() throws Exception {
+        // given
+        doThrow(InvalidValueException.class).when(memberService).deleteMember(any(Member.class), anyString());
+
+        // when
+        // then
+        mockMvc.perform(
+                        delete("/member/myAccount")
+                                .param("password", "wrong"))
+                .andExpect(status().isUnauthorized());
     }
 }

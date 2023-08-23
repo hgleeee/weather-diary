@@ -2,6 +2,8 @@ package com.example.weatherdiary.controller;
 
 import com.example.weatherdiary.domain.Member;
 import com.example.weatherdiary.dto.LoginIdAndPassword;
+import com.example.weatherdiary.repository.MemberRepository;
+import com.example.weatherdiary.resolver.CurrentMemberArgumentResolver;
 import com.example.weatherdiary.service.MemberService;
 import com.example.weatherdiary.utils.SessionConst;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +35,9 @@ class LoginControllerTest {
 
     @MockBean
     MemberService memberService;
+
+    @MockBean
+    MemberRepository memberRepository;
 
     @Mock
     MockHttpSession mockHttpSession;

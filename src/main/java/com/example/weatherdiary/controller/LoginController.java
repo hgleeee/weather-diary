@@ -36,7 +36,7 @@ public class LoginController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private String getCurrentLoginId() {
+    public String getCurrentLoginId() {
         return (String) httpSession.getAttribute(SessionConst.LOGIN_ID);
     }
 
