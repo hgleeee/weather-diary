@@ -26,7 +26,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void signUpMember(MemberSignUpParam memberSignUpParam) {
+    public void signUpMember(MemberSignUpParam memberSignUpParam) throws NotUniqueLoginIdException {
+        if (memberRepository.findByLoginId(memberSignUpParam.getLoginId()).isPresent()) {
+            throw new NotUniqueLoginIdException(String.format("%s는 중복된 아이디입니다.", memberSignUpParam.getLoginId()));
+        }
         memberRepository.save(Member.builder()
                 .loginId(memberSignUpParam.getLoginId())
                 .password(memberSignUpParam.getPassword())
@@ -38,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     @Override
     public void checkLoginIdDuplicated(String loginId) throws NotUniqueLoginIdException {
-        if (!memberRepository.findByLoginId(loginId).isEmpty()) {
+        if (memberRepository.findByLoginId(loginId).isPresent()) {
             throw new NotUniqueLoginIdException(String.format("%s는 중복된 아이디입니다.", loginId));
         }
     }
