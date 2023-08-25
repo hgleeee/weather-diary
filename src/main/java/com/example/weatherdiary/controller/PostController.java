@@ -5,10 +5,12 @@ import com.example.weatherdiary.annotation.MemberLoginCheck;
 import com.example.weatherdiary.domain.Member;
 import com.example.weatherdiary.domain.Post;
 import com.example.weatherdiary.dto.PostParam;
+import com.example.weatherdiary.exception.NotExistMemberException;
 import com.example.weatherdiary.exception.NotExistPostException;
 import com.example.weatherdiary.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.expression.AccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,16 +43,44 @@ public class PostController {
         }
     }
 
-    public ResponseEntity<List<Post>> getPostsByLoginId() {
-        return null;
+    @MemberLoginCheck
+    @GetMapping
+    public ResponseEntity<List<Post>> getPostsByLoginId(@RequestParam(value = "userId") String loginId) {
+        try {
+            List<Post> posts = postService.getPostsByLoginId(loginId);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (NotExistMemberException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    public ResponseEntity<Void> updatePost() {
-        return null;
+    @MemberLoginCheck
+    @PatchMapping("/{postId}")
+    public ResponseEntity<String> updatePost(@PathVariable Long postId,
+                                             String content,
+                                             @CurrentMember Member currentMember) {
+        try {
+            postService.updatePost(currentMember, postId, content);
+        } catch (AccessException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (NotExistPostException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> deletePost() {
-        return null;
+    @MemberLoginCheck
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId,
+                                             @CurrentMember Member currentMember) {
+        try {
+            postService.deletePost(currentMember, postId);
+        } catch (AccessException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (NotExistPostException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
