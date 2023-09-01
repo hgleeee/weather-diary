@@ -61,9 +61,7 @@ class LoginControllerTest {
     void loginWithSuccess() throws Exception {
 
         // given
-        MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
-        paramMap.add("loginId", "test");
-        paramMap.add("password", "test");
+        String requestJson = "{\"loginId\":\"test\", \"password\":\"test\"}";
         when(memberService.findMemberLoginId(any(LoginIdAndPassword.class))).thenReturn(Optional.of(member.getLoginId()));
 
         // when
@@ -71,7 +69,7 @@ class LoginControllerTest {
         mockMvc.perform(
                 post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .params(paramMap))
+                        .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -83,9 +81,7 @@ class LoginControllerTest {
     void loginInvalidWithFailure() throws Exception {
 
         // given
-        MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
-        paramMap.add("loginId", "wrong");
-        paramMap.add("password", "wrong");
+        String requestJson = "{\"loginId\":\"wrong\", \"password\":\"wrong\"}";
         when(memberService.findMemberLoginId(any(LoginIdAndPassword.class))).thenReturn(Optional.empty());
 
         // when
@@ -93,7 +89,7 @@ class LoginControllerTest {
         mockMvc.perform(
                         post("/login")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .params(paramMap))
+                                .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
 
@@ -107,16 +103,13 @@ class LoginControllerTest {
         // given
         mockHttpSession.setAttribute(SessionConst.LOGIN_ID, member.getLoginId());
         when(memberService.findMemberLoginId(any(LoginIdAndPassword.class))).thenReturn(Optional.of(member.getLoginId()));
-
-        MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
-        paramMap.add("loginId", "test");
-        paramMap.add("password", "test");
+        String requestJson = "{\"loginId\":\"test\", \"password\":\"test\"}";
         // when
         // then
         mockMvc.perform(
                         post("/login").session(mockHttpSession)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .params(paramMap))
+                                .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

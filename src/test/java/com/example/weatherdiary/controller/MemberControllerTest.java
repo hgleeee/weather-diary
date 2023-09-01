@@ -50,19 +50,14 @@ class MemberControllerTest {
     @DisplayName("회원가입 성공")
     void signUpMemberWithSuccess() throws Exception {
         // given
-        MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
-        paramMap.add("loginId", "test");
-        paramMap.add("password", "test");
-        paramMap.add("name", "lee");
-        paramMap.add("email", "test@test.com");
-
+        String requestJson = "{\"loginId\":\"test\", \"password\":\"test\", \"name\":\"lee\", \"email\":\"test@test.com\"}";
         doNothing().when(memberService).signUpMember(any(MemberSignUpParam.class));
 
         // when
         ResultActions resultActions = mockMvc.perform(
                 post("/member/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .params(paramMap));
+                        .content(requestJson));
 
         // then
         resultActions.andExpect(status().isCreated());
@@ -72,19 +67,14 @@ class MemberControllerTest {
     @DisplayName("회원가입 실패 - 중복된 아이디 입력")
     void signUpMemberWithFailure() throws Exception {
         // given
-        MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
-        paramMap.add("loginId", "test");
-        paramMap.add("password", "test");
-        paramMap.add("name", "lee");
-        paramMap.add("email", "test@test.com");
-
+        String requestJson = "{\"loginId\":\"test\", \"password\":\"test\", \"name\":\"lee\", \"email\":\"test@test.com\"}";
         doThrow(NotUniqueLoginIdException.class).when(memberService).signUpMember(any(MemberSignUpParam.class));
 
         // when
         ResultActions resultActions = mockMvc.perform(
                 post("/member/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .params(paramMap));
+                        .content(requestJson));
 
         // then
         resultActions.andExpect(status().isConflict());

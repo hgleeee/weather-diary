@@ -27,7 +27,7 @@ public class PostController {
     @MemberLoginCheck
     @PostMapping
     public ResponseEntity<Void> uploadPost(@CurrentMember Member currentMember,
-                                           @Valid PostParam postParam) {
+                                           @Valid @RequestBody PostParam postParam) {
         postService.uploadPost(currentMember, postParam);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -22,7 +22,7 @@ public class MemberController {
     private final LoginController loginController;
 
     @PostMapping("/register")
-    public ResponseEntity<String> signUpMember(@Valid MemberSignUpParam memberSignUpParam) {
+    public ResponseEntity<String> signUpMember(@Valid @RequestBody MemberSignUpParam memberSignUpParam) {
         try {
             memberService.signUpMember(memberSignUpParam);
         } catch (NotUniqueLoginIdException e) {

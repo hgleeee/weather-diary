@@ -63,13 +63,11 @@ class PostControllerTest {
     void uploadPostWithSuccess() throws Exception {
         // given
         doNothing().when(postService).uploadPost(any(Member.class), any(PostParam.class));
-        MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
-        param.add("title", "hello everyone!");
-        param.add("content", "hi");
+        String requestJson = "{\"title\":\"hello everyone!\", \"content\":\"hi\"}";
 
         // when-then
         mockMvc.perform(post("/post")
-                .params(param)
+                .content(requestJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         verify(postService).uploadPost(any(Member.class), any(PostParam.class));

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class LoginController {
     private final HttpSession httpSession;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid LoginIdAndPassword loginIdAndPassword) {
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginIdAndPassword loginIdAndPassword) {
 
         Optional<String> optionalMember = memberService.findMemberLoginId(loginIdAndPassword);
         if (optionalMember.isEmpty()) {
