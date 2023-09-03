@@ -18,7 +18,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ${env.imageName} .'
+                sh 'docker build -t $(env.imageName) .'
             }
         }
 
@@ -33,7 +33,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                kubectl create deployment weather-diary --image=${env.imageName}
+                kubectl create deployment weather-diary --image=$(env.imageName)
                 kubectl expose deployment weather-diary --type=LoadBalancer --port=8080 --target-port=80 --name=weather-diary-svc
                 '''
             }
