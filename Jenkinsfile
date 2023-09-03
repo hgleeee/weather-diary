@@ -2,55 +2,38 @@ pipeline {
     agent any
 
     environment {
-        imageName = 'weather-diary'
-        registryCredential =
+        imageName = 'weather-diary-img:1.0'
+        credentialsId = 'dckr_pat_Yn4kRQr3YTBVhHKhPDSbMqRoEYc'
         dockerImage = ''
     }
 
     stages {
         stage('Git scm update') {
             steps {
-                echo 'Git Scm Update'
-                git url: 'https://github.com/hgleeee/weather-diary.git',
-                    branch: 'main',
-                    credentialsId: '생성한 github access token credential id'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'Build'
-                dir ('.') {
-                    sh 'gradlew clean build'
-                }
+                git credentialsId: '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',
+                url: 'https://github.com/hgleeee/weather-diary.git',
+                branch: 'main'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo 'Build Docker Image'
-                script {
-                    dockerImage = docker.build imageName
-                }
+                sh 'docker build -t ${env.imageName} .'
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                echo 'Push Docker Image'
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push("1.0")
-                    }
+                withDockerRegistry(credentialsId: '${env.credentialsId}', url: '') {
+                        sh 'docker push ${env.imageName}'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploy'
                 sh '''
-                kubectl create deployment weather-diary --image=($env.imageName)
+                kubectl create deployment weather-diary --image=${env.imageName}
                 kubectl expose deployment weather-diary --type=LoadBalancer --port=8080 --target-port=80 --name=weather-diary-svc
                 '''
             }
