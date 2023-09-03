@@ -82,14 +82,13 @@ class PostRepositoryTest {
     @DisplayName("사용자 아이디로 작성 글 반환")
     void findByLoginId() {
         // given
-        Member member = Member.builder()
+        Member member = memberRepository.save(Member.builder()
                 .id(1L)
                 .loginId("test")
                 .password("test")
                 .name("kim")
                 .email("test@test.com")
-                .build();
-        memberRepository.save(member);
+                .build());
 
         Post savedPost1 = postRepository.save(Post.builder()
                 .title("hi1")

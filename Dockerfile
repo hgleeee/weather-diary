@@ -10,7 +10,6 @@ COPY gradlew $APP_HOME
 COPY gradle $APP_HOME/gradle
 
 RUN chmod +x gradlew
-RUN ./gradlew -x test build || return 0
 COPY src $APP_HOME/src
 RUN ./gradlew clean build
 
