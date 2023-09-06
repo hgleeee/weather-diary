@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
+        imageName = 'weather-diary-img:1.0'
+        credentialsId = 'dckr_pat_Yn4kRQr3YTBVhHKhPDSbMqRoEYc'
         dockerImage = ''
-        registryCredential = 'DockerHub_IdPwd'
     }
 
     stages {
@@ -17,16 +18,14 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t zdsay5863/weather-diary:1.0 .'
+                sh 'docker build -t ${env.imageName} .'
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push("1.0")
-                    }
+                withDockerRegistry(credentialsId: '${env.credentialsId}', url: '') {
+                        sh 'docker push ${env.imageName}'
                 }
             }
         }
@@ -34,8 +33,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                kubectl create deployment dpy-weather-diary --image=zdsay5863/weather-diary:1.0
-                kubectl expose deployment dpy-weather-diary --type=LoadBalancer --port=8080 --target-port=80 --name=weather-diary-svc
+                kubectl create deployment weather-diary --image=${env.imageName}
+                kubectl expose deployment weather-diary --type=LoadBalancer --port=8080 --target-port=80 --name=weather-diary-svc
                 '''
             }
         }
