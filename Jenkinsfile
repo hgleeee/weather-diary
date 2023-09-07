@@ -33,6 +33,12 @@ pipeline {
             }
         }
 
+        stage('Pull Image') {
+            steps {
+                sh 'docker pull zdsay5863/weather-diary:1.0'
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh '''
