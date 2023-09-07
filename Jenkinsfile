@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        registryCredential = 'DockerHub_IdPwd'
+        registryCredential = credentials('DockerHub_IdPwd')
         dockerImage = ''
     }
 
@@ -17,14 +17,16 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t zdsay5863/weather-diary .'
+                script {
+                    dockerImage = docker.build("zdsay5863/weather-diary")
+                }
             }
         }
 
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('', registryCredential) {
+                    docker.withRegistry('https://registry.hub.docker.com', 'DockerHub_IdPwd') {
                         dockerImage.push("1.0")
                     }
                 }
