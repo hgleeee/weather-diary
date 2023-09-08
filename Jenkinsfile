@@ -43,7 +43,7 @@ pipeline {
             steps {
                 sh '''
                 kubectl create deployment dpy-weather-diary --image=zdsay5863/weather-diary:1.0
-                kubectl expose deployment dpy-weather-diary --type=LoadBalancer --port=8080 --target-port=80 --name=weather-diary-svc
+                kubectl expose deployment dpy-weather-diary --type=LoadBalancer --port=8080 --target-port=8080 --name=weather-diary-svc
                 '''
             }
         }
