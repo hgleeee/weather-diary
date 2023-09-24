@@ -1,4 +1,4 @@
-package com.example.weatherdiary.domain.weather;
+package com.example.weatherdiary.domain;
 
 import lombok.*;
 
